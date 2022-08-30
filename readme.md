@@ -13,31 +13,22 @@ In the feature step, you have to provide the path of `.json` file, WSI file, and
 In the visual step, we make a visualization of the graph and segmentation. You have to provide the path of feature, WSI file and `.xml` file. The path of feature is the output of feature step, and this step needs the cell ID and the edge information in it. `.xml` file is the annotation file same as the feature step. We only plot the range in the annotation. Note that if the annotation is too large then it will failed.
 
 ## Repository Structure
-`Hover`: the implementation of HoVer-Net, which clone from the offical [implementation](https://github.com/vqdang/hover_net)
-
-`main.py`: main function
-
-`F1_CellSegment.py`: segment step by calling `Hover`.
-
-`F3_FeatureExtract.py`: feature step by calling `WSIGraph.py`.
-
-`F4_Visualization.py`: visual step by calling `utils_xml.py`.
-
-`utils_xml.py`: define some tools to finish visualization.
-
+`Hover`: the implementation of HoVer-Net, which clone from the offical [implementation](https://github.com/vqdang/hover_net)  
+`main.py`: main function  
+`F1_CellSegment.py`: segment step by calling `Hover`.  
+`F3_FeatureExtract.py`: feature step by calling `WSIGraph.py`.  
+`F4_Visualization.py`: visual step by calling `utils_xml.py`.  
+`utils_xml.py`: define some tools to finish visualization.  
 `WSIGraph.py`: define the process of feature extract.
 
 ## Usage
 Here are some example to use it.
 
-segment step
+segment step  
+`python main.py segment --input_dir='./wsi' --output_dir='./output'`  
 
-`python main.py segment --input_dir='./wsi' --output_dir='./output'`
-
-feature step
-
+feature step  
 `python main.py feature --json_file='./output/json/sample.json' --wsi_path='./wsi/sample.ndpi' --output_path='./feature'`
 
-visual step
-
+visual step  
 `python main.py visual --feature_path='./feature/sample' --wsi_path='./wsi/sample.ndpi' --xml_path='./xml/sample.xml'`
