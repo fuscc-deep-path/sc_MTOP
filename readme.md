@@ -28,7 +28,7 @@ segment step
 `python main.py segment --input_dir='./wsi' --output_dir='./output'`  
 
 feature step  
-`python main.py feature --json_file='./output/json/sample.json' --wsi_path='./wsi/sample.ndpi' --output_path='./feature'`
+`python main.py feature --json_path='./output/json/sample.json' --wsi_path='./wsi/sample.ndpi' --output_path='./feature'`
 
 visual step  
 `python main.py visual --feature_path='./feature/sample' --wsi_path='./wsi/sample.ndpi' --xml_path='./xml/sample.xml'`

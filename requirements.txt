@@ -1,0 +1,17 @@
+docopt==0.6.2
+imgaug==0.4.0
+matplotlib==3.6.2
+numpy==1.23.5
+opencv_python==4.6.0.66
+openslide_python==1.2.0
+pandas==1.5.2
+psutil==5.9.4
+python_igraph==0.10.2
+scikit_image==0.19.3
+scikit_learn==1.2.0
+scipy==1.9.3
+skimage==0.0
+tensorboardX==2.5.1
+termcolor==2.1.1
+torch==1.12.1+cu102
+tqdm==4.64.1

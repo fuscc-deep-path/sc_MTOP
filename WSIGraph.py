@@ -101,7 +101,7 @@ def SingleMorphFeatures(args):
         regionProps = getRegionPropFromContour(contour, bbox)
         featuresDict['Area'] += [regionProps.area]
         featuresDict['AreaBbox'] += [regionProps.bbox_area]
-        featuresDict['AreaConvex'] += [regionProps.convex_area]
+        # featuresDict['AreaConvex'] += [regionProps.convex_area]
         # featuresDict['EquialentDiameter'] += [regionProps.equivalent_diameter]
         featuresDict['CellEccentricities'] += [regionProps.eccentricity]
         featuresDict['Circularity'] += [(4 * np.pi * regionProps.area) / (regionProps.perimeter ** 2)]
@@ -212,17 +212,17 @@ def SingleGLCMFeatures(args):
         # 去除背景
         cellImg[~cellmask] = 0
 
-        outMatrix = skfeat.greycomatrix(cellImg, [1], [0])
+        outMatrix = skfeat.graycomatrix(cellImg, [1], [0])
         # 去除共生矩阵中与背景相关的值
         outMatrix[0, :, ...] = 0
         outMatrix[:, 0, ...] = 0
 
-        dissimilarity = skfeat.greycoprops(outMatrix, 'dissimilarity')[0][0]
-        homogeneity = skfeat.greycoprops(outMatrix, 'homogeneity')[0][0]
+        dissimilarity = skfeat.graycoprops(outMatrix, 'dissimilarity')[0][0]
+        homogeneity = skfeat.graycoprops(outMatrix, 'homogeneity')[0][0]
         # energy = skfeat.greycoprops(outMatrix, 'energy')[0][0]
-        ASM = skfeat.greycoprops(outMatrix, 'ASM')[0][0]
-        contrast = skfeat.greycoprops(outMatrix, 'contrast')[0][0]
-        correlation = skfeat.greycoprops(outMatrix, 'correlation')[0][0]
+        ASM = skfeat.graycoprops(outMatrix, 'ASM')[0][0]
+        contrast = skfeat.graycoprops(outMatrix, 'contrast')[0][0]
+        correlation = skfeat.graycoprops(outMatrix, 'correlation')[0][0]
         SumAverage, Entropy, SumVariance, Average, Variance = mygreycoprops(outMatrix)
 
         featuresDict['ASM'] += [ASM]
@@ -459,7 +459,7 @@ def constructGraphFromDict(
                  GLCMFeats.values()):  ##morphFeats这个字典是按照特征作为键，每个特征名称作为键对应的值是特征列表，包含若干细胞这个特征的值，例如第一个键elongation就有472726个,和globalGraph的vs长度一致
         if k != 'name':
             globalGraph.vs[GLCMFeats['name']][
-                'GLCM_' + k] = v  ## 这里这个vs确实不太清楚，但是结合217-219行那里都是字典的形式，来存储特征值，这里也可以理解为往globalGraph上面加字典？
+                'Texture_' + k] = v  ## 这里这个vs确实不太清楚，但是结合217-219行那里都是字典的形式，来存储特征值，这里也可以理解为往globalGraph上面加字典？
     print(f"{'GLCM features cost':#^40s}, {time.time() - t2:*^10.2f}")
 
     t3 = time.time()
