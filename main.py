@@ -29,22 +29,20 @@ feature_cli = """
 Arguments for feature extract.
 
 Usage:
-    feature (--json_path=<filepath>) (--wsi_path=<filepath>)\
-            (--output_path=<folderpath>) [--xml_path=<path>]
+    feature --json_path=<filepath> --wsi_path=<filepath> --output_path=<folderpath> [--xml_path=<path>]
 
 Option:
-    --json_path     Path to HoVer-Net output, it show be a json file
-    --wsi_path      Path to wsi file
-    --output_path   Path to output
-    --xml_path      Path to xml. The xml is an annotation file of ImageScope.\
-                    Only extract the feature in the annotation.[default: None]
+    --json_path=<filepath>     Path to HoVer-Net output, it show be a json file.
+    --wsi_path=<filepath>      Path to wsi file.
+    --output_path=<folderpath>   Path to output.
+    --xml_path=<path>      Path to xml. The xml is an annotation file of ImageScope. Only extract the feature in the annotation.[default: None]
 """
 
 visual_cli = """
 Arguments for visual.
 
 Usage:
-    feature --feature_path=<filepath> --wsi_path=<filepath> --xml_path=<filepath>
+    visual --feature_path=<filepath> --wsi_path=<filepath> --xml_path=<filepath>
 
 Option:
     --feature_path=<filepath>  Path to feature folder, it show be a folder including feature and edge .csv file.
@@ -78,9 +76,13 @@ if __name__ == '__main__':
     print(sub_args)
     if sub_cmd=='segment':
         from F1_CellSegment import fun1
+        import sys
+        sys.path.append('Hover')
         fun1(**sub_args)
     elif sub_cmd=='feature':
         from F3_FeatureExtract import fun3
+        if sub_args['xml_path'] == 'None':
+            sub_args['xml_path'] = None
         fun3(**sub_args)
     elif sub_cmd=='visual':
         from F4_Visualization import fun4

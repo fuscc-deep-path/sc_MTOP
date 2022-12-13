@@ -33,7 +33,7 @@ def fun3(json_path, wsi_path, output_path, xml_path=None):
         vertex_dataframe = vertex_dataframe.iloc[index_x]
 
     col_dist = defaultdict(list)
-    cellType = ['T', 'I', 'S', 'N']
+    cellType = ['T', 'I', 'S']
     for featname in vertex_dataframe.columns.values:
         if 'Graph' not in featname:
             # public feature, including cell information, Morph feature and GLCM feature

@@ -474,13 +474,14 @@ def constructGraphFromDict(
                     ## 字典的前3个value，都是[[1,2,3,......]]这样列表套列表的list；后面则是列表里面2个列表，类似于[[1,2,3,....],[2,3,4,...]]
                     'I-I': [inflamIDs, inflamIDs],
                     'S-S': [connecIDs, connecIDs],
-                    'N-N': [normalIDs, normalIDs],
+                    # 'N-N': [normalIDs, normalIDs],
                     'T-I': [neoplaIDs, inflamIDs],
                     'T-S': [neoplaIDs, connecIDs],
-                    'T-N': [neoplaIDs, normalIDs],
+                    # 'T-N': [neoplaIDs, normalIDs],
                     'I-S': [inflamIDs, connecIDs],
-                    'I-N': [inflamIDs, normalIDs],
-                    'S-N': [connecIDs, normalIDs]}
+                    # 'I-N': [inflamIDs, normalIDs],
+                    # 'S-N': [connecIDs, normalIDs]
+    }
 
     for featype, featype_index_list in zip(featype_dict.keys(),
                                            featype_dict.values()):  ##这里对featype_dict的value进行迭代，featype_index_list要么是列表套列表，要么是列表里面套2个列表

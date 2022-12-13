@@ -4,8 +4,8 @@ import torch
 def fun1(input_dir, output_dir):
     print(input_dir)
     print(output_dir)
-    model_path = './hovernet_fast_pannuke_type_tf2pytorch.tar'
-    args = {'gpu':'0', 'nr_types':6, 'type_info_path':'type_info.json', 'model_mode':'fast',
+    model_path = 'Hover/hovernet_fast_pannuke_type_tf2pytorch.tar'
+    args = {'gpu':'0', 'nr_types':6, 'type_info_path':'Hover/type_info.json', 'model_mode':'fast',
             'model_path':model_path, 'nr_inference_workers':8, 'nr_post_proc_workers':0,
             'batch_size':16}
     sub_args = {'input_dir': input_dir,

@@ -53,12 +53,12 @@ for i in np.linspace(0, 1, 20)[1::2]:
         clusters_RGB.append([int(colormap(i, bytes=True)[c]) for c in range(3)])
 assert len(clusters_id) < len(clusters_RGB), f"the num of classes ({len(clusters_id)}) can't more than the num of RGB list ({len(clusters_RGB)})"
 
-cellType_RGB = [[0  ,   0,   0],#nolabe no color 
-                [255,   0,   0],#neopla red
-                [0  , 255,   0],#inflam green
-                [0  ,   0, 255],#connec blue
-                [255, 255,   0],#necros
-                [255, 165,   0]]#normal
+cellType_RGB = [(0  ,   0,   0),#nolabe no color 
+                (255,   0,   0),#neopla red
+                (0  , 255,   0),#inflam green
+                (0  ,   0, 255),#connec blue
+                (255, 255,   0),#necros
+                (255, 165,   0)]#normal
 
 colormap = mpl.cm.get_cmap('tab20')
 edge_RGB= []
@@ -66,7 +66,7 @@ for i in np.linspace(0, 1, 20)[::2]:
         edge_RGB.append([int(colormap(i, bytes=True)[c]) for c in range(3)])
 for i in np.linspace(0, 1, 20)[1::2]:
         edge_RGB.append([int(colormap(i, bytes=True)[c]) for c in range(3)])
-HEX2RGB = lambda x:[int(x[1:3], 16), int(x[3:5], 16), int(x[5:7], 16)]
+HEX2RGB = lambda x:(int(x[1:3], 16), int(x[3:5], 16), int(x[5:7], 16))
 edge_RGB[0] = HEX2RGB('#FF0000')
 edge_RGB[1] = HEX2RGB('#00FF00')
 edge_RGB[2] = HEX2RGB('#0000FF')
@@ -158,9 +158,9 @@ class make_graph_img():
         n_data = 0
         for c in csv_file:
             if csv_data is None:
-                csv_data = pd.read_csv(os.path.join(feature_path, sample_name+'_Feats_'+c+'.csv'))
+                csv_data = pd.read_csv(os.path.join(feature_path, sample_name+'_vertex_'+c+'.csv'))
             else:
-                temp = pd.read_csv(os.path.join(feature_path, sample_name+'_Feats_'+c+'.csv'))
+                temp = pd.read_csv(os.path.join(feature_path, sample_name+'_vertex_'+c+'.csv'))
                 csv_data = pd.concat([csv_data, temp])
         inbox_name = np.empty((0), dtype=np.int64)
         inbox_centroid = np.empty((0, 2), dtype=np.float32)
@@ -251,7 +251,7 @@ class make_graph_img():
         # %%
         # Read edge csv
         ## Prepare index from table data
-        csv_data = pd.read_csv(os.path.join(rootpath, sample_name, sample_name+'_edge'+'.csv'))
+        csv_data = pd.read_csv(os.path.join(feature_path, sample_name+'_edge'+'.csv'))
         source = csv_data.source
         target = csv_data.target
 
@@ -312,21 +312,21 @@ class make_graph_img():
         def draw_circle(img, bbox, myclass, radius=7):
             center = bbox.mean(axis=0).astype('int')
             center[center<0] = 0
-            cv2.circle(img, center, radius=radius, color=cellType_RGB[int(myclass)], thickness=-1)
+            cv2.circle(img, tuple(center), radius=radius, color=cellType_RGB[int(myclass)], thickness=-1)
         self.make_img_element(type=2, draw_fun=draw_circle)
 
     def make_img_line(self, thickness=5):
         def draw_line(img, bbox, myclass):
             pt1 = bbox[0].astype('int')
             pt2 = bbox[1].astype('int')
-            cv2.line(img, pt1, pt2, color=edge_RGB[edgeDictReverse[myclass]], thickness=thickness)
+            cv2.line(img, tuple(pt1), tuple(pt2), color=edge_RGB[edgeDictReverse[myclass]], thickness=thickness)
         self.make_img_element(type=0, draw_fun=draw_line)
 
     def make_img_rect(self, thickness=5):
         def draw_line(img, bbox, myclass):
             pt1 = bbox[0].astype('int')
             pt2 = bbox[1].astype('int')
-            cv2.rectangle(img, pt1, pt2, color=clusters_RGB[myclass], thickness=thickness)
+            cv2.rectangle(img, tuple(pt1), tuple(pt2), color=clusters_RGB[myclass], thickness=thickness)
         self.make_img_element(type=1, draw_fun=draw_line)
 
     def make_img(self, line_size=5, rect_size=5):
