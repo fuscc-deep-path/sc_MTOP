@@ -27,7 +27,7 @@ To install the environment, you can run the command in the terminal:
 pip install -r requirements.txt
 ```
 The code require package `openslide python`, but its installation is different between Linux and Windows. Please follow the [offical documentation](https://openslide.org/api/python/) to install and import it in python to make sure it can work correctly.
-The HoVer-Net pre-train parameter is not provided in the source code. You can download it follow the [Description](#hovernet). Instead, you can download it in our [release](https://github.com/fuscc-deep-path/sc_MTOP/releases/download/Demo/hovernet_fast_pannuke_type_tf2pytorch.tar).
+The HoVer-Net pre-train parameter is not provided in the source code. The file size is 144 MB. You can download it follow the [Description](#hovernet). Instead, you can download it in our [release](https://github.com/fuscc-deep-path/sc_MTOP/releases/download/Demo/hovernet_fast_pannuke_type_tf2pytorch.tar).
 
 ## Repository Structure
 `Hover`: the implementation of HoVer-Net, which clone from the offical [implementation](https://github.com/vqdang/hover_net)  
@@ -50,17 +50,15 @@ Download the demo data
 mkdir ./wsi
 wget --no-check-certificate --content-disposition -P ./wsi https://github.com/fuscc-deep-path/sc_MTOP/releases/download/Demo/Example001.ndpi
 ```
-segment step  
+Segment step -- This step take almost 2 hours with 2080Ti GPU and SSD.
 ```
 python main.py segment --input_dir='./wsi' --output_dir='./output'
 ```
-
-feature step  
+Feature step -- This step take almost 40 minutes with 128GB RAM and 8 process.
 ```
 python main.py feature --json_path='./output/json/Example001.json' --wsi_path='./wsi/Example001.ndpi' --output_path='./feature'
 ```
-
-visual step  
+Visual step  
 ```
 python main.py visual --feature_path='./feature/sample' --wsi_path='./wsi/sample.ndpi' --xml_path='./xml/sample.xml'
 ```
