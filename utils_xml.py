@@ -158,9 +158,9 @@ class make_graph_img():
         n_data = 0
         for c in csv_file:
             if csv_data is None:
-                csv_data = pd.read_csv(os.path.join(feature_path, sample_name+'_vertex_'+c+'.csv'))
+                csv_data = pd.read_csv(os.path.join(feature_path, sample_name+'_Feats_'+c+'.csv'))
             else:
-                temp = pd.read_csv(os.path.join(feature_path, sample_name+'_vertex_'+c+'.csv'))
+                temp = pd.read_csv(os.path.join(feature_path, sample_name+'_Feats_'+c+'.csv'))
                 csv_data = pd.concat([csv_data, temp])
         inbox_name = np.empty((0), dtype=np.int64)
         inbox_centroid = np.empty((0, 2), dtype=np.float32)

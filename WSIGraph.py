@@ -647,7 +647,7 @@ if __name__ == '__main__':
 
             os.makedirs(sampleres_dir)
             for i in col_dist.keys():
-                vertex_csvfile = os.path.join(sampleres_dir, jsonres.split('.')[0] + '_vertex_' + i + '.csv')
+                vertex_csvfile = os.path.join(sampleres_dir, jsonres.split('.')[0] + '_Feats_' + i + '.csv')
                 save_index = vertex_dataframe['CellType'].isin(cellType_save[i]).values
                 vertex_dataframe.iloc[save_index].to_csv(vertex_csvfile, index=False, columns=col_dist[i])
             edge_csvfile = os.path.join(sampleres_dir, jsonres.split('.')[0] + '_edge.csv')
