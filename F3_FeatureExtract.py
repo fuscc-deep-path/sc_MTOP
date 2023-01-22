@@ -58,12 +58,6 @@ def fun3(json_path, wsi_path, output_path, xml_path=None):
         vertex_csvfile = os.path.join(output_path, sample_name + '_Feats_' + i + '.csv')
         save_index = vertex_dataframe['CellType'].isin(cellType_save[i]).values
         vertex_dataframe.iloc[save_index].to_csv(vertex_csvfile, index=False, columns=col_dist[i])
-    edge_csvfile = os.path.join(output_path, sample_name + '_edge.csv')
+    edge_csvfile = os.path.join(output_path, sample_name + '_Edges.csv')
     # globalgraph.get_edge_dataframe().to_csv(edge_csvfile, index=False)
     edge_info.to_csv(edge_csvfile, index=False)
-
-if __name__ == '__main__':
-    fun3('./data_example/COWH/COWH.json',
-         './data_example/COWH/COWH.ndpi',
-         './data_example',
-         xml_path=None)

@@ -251,7 +251,7 @@ class make_graph_img():
         # %%
         # Read edge csv
         ## Prepare index from table data
-        csv_data = pd.read_csv(os.path.join(feature_path, sample_name+'_edge'+'.csv'))
+        csv_data = pd.read_csv(os.path.join(feature_path, sample_name+'_Edges'+'.csv'))
         source = csv_data.source
         target = csv_data.target
 

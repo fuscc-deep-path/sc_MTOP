@@ -36,7 +36,7 @@ def getRegionPropFromContour(contour, bbox, extention=2):
                       width + extention * 2),
                      dtype=np.uint8)
     contour = np.array(contour)
-    contour[:, 0] = contour[:, 0] - left + extention  ## 这里是因为整个image往外面扩了2个extension所以每个点相较于左边好上边都要加1个extension
+    contour[:, 0] = contour[:, 0] - left + extention 
     contour[:, 1] = contour[:, 1] - top + extention
     cv2.drawContours(image, [contour], 0, 1, -1)
     # TODO: check contour coords
@@ -49,7 +49,7 @@ def getCurvature(contour, n_size=5):
     contour_circle = np.concatenate([contour, contour[0:1]], axis=0)
     dxy = np.diff(contour_circle, axis=0)
 
-    # 计算保留哪些需要计算的节点，紧密的节点会导致计算结果粗糙
+ 
     samplekeep = np.zeros((len(contour)), dtype=np.bool_)
     samplekeep[0] = True
     flag = 0
@@ -163,7 +163,7 @@ def getCellMask(contour, bbox, pad=2, level=0):
                          width + pad * 2),
                         dtype=np.uint8)
     contour = np.array(contour)
-    contour[:, 0] = contour[:, 0] - left + pad  ## 这里是因为整个image往外面扩了2个extension所以每个点相较于左边好上边都要加1个extension
+    contour[:, 0] = contour[:, 0] - left + pad 
     contour[:, 1] = contour[:, 1] - top + pad
     cv2.drawContours(cellMask, [contour], 0, 1, -1)
     return cellMask
@@ -290,7 +290,7 @@ def getSingleGraphFeatures(args):
     elif cmd == 'Degrees':
         result['Degrees'] += subgraph.degree()
     # elif cmd == 'Eigenvector':
-    #     result['Eigenvector'] += subgraph.eigenvector_centrality()  # katz别人文章里面还用过katz centerality和cluster coef
+    #     result['Eigenvector'] += subgraph.eigenvector_centrality()  
     # Slow
     elif cmd == 'Closeness':
         result['Closeness'] += subgraph.closeness()
@@ -421,11 +421,10 @@ def constructGraphFromDict(
     bboxes, centroids, contours, types = [], [], [], []
 
     for nucInfo in tqdm(nucleusInfo['nuc'].values(),
-                        desc="0. Preparing"):  ##nucleusInfo['nuc']得到的是一个序号作为键，各种信息作为value的字典，这里只取后者
-        # ! nucInfo['bbox'] doesn't match nucInfo['contour']  ##nucInfo里面本身有bbox，为什么要从新算 并且算出来的和本身的的还不一样？？？可视化代码是否也是从新计算？
+                        desc="0. Preparing"):
         tmpCnt = np.array(nucInfo[
-                              'contour'])  ##contour是等高线，一个N行2列的数组，每一行是一点二维平面的点，勾勒细胞的轮廓？？？ x坐标最小值是left，y坐标最小值是top；x坐标最大值和y坐标最大值是right和bottom
-        left, top = tmpCnt.min(0)  ## 这里的0应该是axis=0,也就是按照行来看最小值，所以最小值有2个
+                              'contour'])
+        left, top = tmpCnt.min(0)
         right, bottom = tmpCnt.max(0)
         bbox = [[left + offset[0], top + offset[1]], [right + offset[0], bottom + offset[1]]]
         bboxes.append(bbox)  # [[[, ],[, ]], [[, ],[, ]], ......]
@@ -436,7 +435,7 @@ def constructGraphFromDict(
         types), 'The attribute of nodes (bboxes, centroids, types) must have same length'
     vertex_len = len(bboxes)
     globalGraph = ig.Graph()
-    names = [str(i) for i in range(vertex_len)]  ##按理说这里的name应该又变成了连续的？？？
+    names = [str(i) for i in range(vertex_len)]
 
     globalGraph.add_vertices(vertex_len, attributes={
         'name': names, 'Bbox': bboxes, 'Centroid': centroids,
@@ -446,32 +445,32 @@ def constructGraphFromDict(
     t1 = time.time()
     morphFeats = getMorphFeatures(names, contours, bboxes, 'MorphFeatures', process_n=8)
     for k, v in zip(morphFeats.keys(),
-                 morphFeats.values()):  ##morphFeats这个字典是按照特征作为键，每个特征名称作为键对应的值是特征列表，包含若干细胞这个特征的值，例如第一个键elongation就有472726个,和globalGraph的vs长度一致
+                 morphFeats.values()):
      if k != 'name':
          globalGraph.vs[morphFeats['name']][
-             'Morph_' + k] = v  ## 这里这个vs确实不太清楚，但是结合217-219行那里都是字典的形式，来存储特征值，这里也可以理解为往globalGraph上面加字典？
+             'Morph_' + k] = v 
     print(f"{'morph features cost':#^40s}, {time.time() - t1:*^10.2f}")
 
     print('Getting GLCM features')
     t2 = time.time()
     GLCMFeats = getGLCMFeatures(wsiPath, names, contours, bboxes, pad=2, level=level, process_n=8)
     for k, v in zip(GLCMFeats.keys(),
-                 GLCMFeats.values()):  ##morphFeats这个字典是按照特征作为键，每个特征名称作为键对应的值是特征列表，包含若干细胞这个特征的值，例如第一个键elongation就有472726个,和globalGraph的vs长度一致
+                 GLCMFeats.values()):
         if k != 'name':
             globalGraph.vs[GLCMFeats['name']][
-                'Texture_' + k] = v  ## 这里这个vs确实不太清楚，但是结合217-219行那里都是字典的形式，来存储特征值，这里也可以理解为往globalGraph上面加字典？
+                'Texture_' + k] = v 
     print(f"{'GLCM features cost':#^40s}, {time.time() - t2:*^10.2f}")
 
     t3 = time.time()
     nolabeIDs, neoplaIDs, inflamIDs, connecIDs, necrosIDs, normalIDs = \
-        [np.where(np.array(types) == i)[0].tolist() for i in range(6)]  ## 这里的6个IDs，每个都是一个列表，总的顺序是连续的从0开始
+        [np.where(np.array(types) == i)[0].tolist() for i in range(6)] 
     # timeMorph, timeGLCM = 0, 0
 
     edge_info = pd.DataFrame({'source': [], 'target': [], 'featype': []})
 
     # Neopla->T, Inflam->I, Connec->S, Normal->N
     featype_dict = {'T-T': [neoplaIDs, neoplaIDs],
-                    ## 字典的前3个value，都是[[1,2,3,......]]这样列表套列表的list；后面则是列表里面2个列表，类似于[[1,2,3,....],[2,3,4,...]]
+                 
                     'I-I': [inflamIDs, inflamIDs],
                     'S-S': [connecIDs, connecIDs],
                     # 'N-N': [normalIDs, normalIDs],
@@ -484,7 +483,7 @@ def constructGraphFromDict(
     }
 
     for featype, featype_index_list in zip(featype_dict.keys(),
-                                           featype_dict.values()):  ##这里对featype_dict的value进行迭代，featype_index_list要么是列表套列表，要么是列表里面套2个列表
+                                           featype_dict.values()): 
         print(f'Getting {featype} graph feature')
         print(f'---Creating edges')
         # Treat neopla and normal as the same cell type by making the same cellTypeMark,
@@ -559,8 +558,8 @@ def constructGraphFromDict(
     centroid_S = globalGraph.induced_subgraph(connecIDs).vs['Centroid']
     Ttree = cKDTree(centroid_T)
     STree = cKDTree(centroid_S)
-    dis, pairindex_T = Ttree.query(centroid_I, k=1)  # 距离I最近的T的距离和索引
-    paircentroid_T = np.array(centroid_T)[pairindex_T]  # 最近的T细胞坐标
+    dis, pairindex_T = Ttree.query(centroid_I, k=1) 
+    paircentroid_T = np.array(centroid_T)[pairindex_T] 
     barrier = []
     for Tcoor, Icoor, r in tqdm(zip(centroid_I, paircentroid_T, dis), total=len(centroid_I)):
         # 分别计算在r距离内间质细胞的数量
@@ -590,67 +589,3 @@ typeDict2 = {
     'necros': 4,
     'normal': 5
 }
-
-if __name__ == '__main__':
-    json_dir = 'D:\\immune_DL\\DATA\\InferRes_Q2T\\'
-    WSI_dir = 'D:\\immune_DL\\DATA\\WSI_Q2T\\'
-    presplit_dir = 'D:\\immune_DL\\DATA\\CBCGA_WSIxml_forhovernet\\'
-    FinalFeats_dir = 'D:\\immune_DL\\DATA\\FinalFeats0503_Q2T\\'
-    distanceThreshold = 100
-    level = 0
-    k = 5
-
-    for jsonres in os.listdir(json_dir):
-        sampleres_dir = os.path.join(FinalFeats_dir, jsonres.split('.')[0])
-
-        if os.path.exists(sampleres_dir):
-            print(jsonres, 'has been processed')
-            continue
-        else:
-            print('--------------------now process', jsonres, '--------------------')
-            presplit_file = os.path.join(presplit_dir, jsonres.split('.')[0] + '.xml')
-            if os.path.exists(presplit_file):
-                tree = et.parse(presplit_file)
-                root = tree.getroot()
-                box = np.array([[float(vertex.get('X')), float(vertex.get('Y'))] for vertex in
-                                root.find('Annotation').find('Regions').find('Region').find('Vertices').findall(
-                                    'Vertex')])
-                start_point = np.array([box[:, 0].min(), box[:, 1].min()])
-            else:
-                start_point = np.array([0, 0])
-
-            with open(os.path.join(json_dir, jsonres)) as fp:
-                print(f"{'Loading json':*^30s}")
-                nucleusInfo = json.load(fp)
-                wsiPath = os.path.join(WSI_dir, jsonres.replace('.json', '.ndpi'))
-
-            globalgraph, edge_info = constructGraphFromDict(wsiPath, nucleusInfo, distanceThreshold, k, level,
-                                                            start_point)
-            vertex_dataframe = globalgraph.get_vertex_dataframe()
-
-            col_dist = defaultdict(list)
-            cellType = ['T', 'I', 'S', 'N']
-            for featname in vertex_dataframe.columns.values:
-                if 'Graph' not in featname:
-                    # public feature, including cell information, Morph feature and GLCM feature
-                    for cell in cellType:
-                        col_dist[cell] += [featname] if featname != 'Contour' else []
-                else:
-                    # Graph feature, format like 'Graph_T-I_Nsubgraph'
-                    for cell in cellType:
-                        featype = featname.split('_')[1]  # Graph feature type like 'T-T', 'T-I'
-                        col_dist[cell] += [featname] if cell in featype else []
-            cellType_save = {'T': [1],  # Neopla
-                             'I': [2],  # Inflam
-                             'S': [3],  # Connec
-                             'N': [5]}  # Normal
-
-            os.makedirs(sampleres_dir)
-            for i in col_dist.keys():
-                vertex_csvfile = os.path.join(sampleres_dir, jsonres.split('.')[0] + '_Feats_' + i + '.csv')
-                save_index = vertex_dataframe['CellType'].isin(cellType_save[i]).values
-                vertex_dataframe.iloc[save_index].to_csv(vertex_csvfile, index=False, columns=col_dist[i])
-            edge_csvfile = os.path.join(sampleres_dir, jsonres.split('.')[0] + '_edge.csv')
-            # globalgraph.get_edge_dataframe().to_csv(edge_csvfile, index=False)
-            edge_info.to_csv(edge_csvfile, index=False)
-
