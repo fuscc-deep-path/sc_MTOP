@@ -209,11 +209,9 @@ def SingleGLCMFeatures(args):
     for contour, bbox in zip(contours, bboxes):
         cellImg = getCellImg(slidePtr, bbox, pad, level)
         cellmask = getCellMask(contour, bbox, pad).astype(np.bool_)
-        # 去除背景
         cellImg[~cellmask] = 0
 
         outMatrix = skfeat.graycomatrix(cellImg, [1], [0])
-        # 去除共生矩阵中与背景相关的值
         outMatrix[0, :, ...] = 0
         outMatrix[:, 0, ...] = 0
 
@@ -562,7 +560,6 @@ def constructGraphFromDict(
     paircentroid_T = np.array(centroid_T)[pairindex_T] 
     barrier = []
     for Tcoor, Icoor, r in tqdm(zip(centroid_I, paircentroid_T, dis), total=len(centroid_I)):
-        # 分别计算在r距离内间质细胞的数量
         set1 = set(STree.query_ball_point(Tcoor, r))
         set2 = set(STree.query_ball_point(Icoor, r))
         barrier.append(len(set1 & set2))
