@@ -547,8 +547,8 @@ def constructGraphFromDict(
 
     # print(f"{'Graph features cost':#^40s}, {time.time() - t3:*^10.2f}")
 
-    # Stroma barrier
-    # For each inflam node, add it to neoplaAddConnecGraph, compute barrier and delete
+    # Stroma blocker
+    # For each inflam node, add it to neoplaAddConnecGraph, compute blocker and delete
     # ! Why select the maximum subgraph, if distanceThreshold wasn't set appropriately, shortestPathsLymCancer would be empty
     t4 = time.time()
     centroid_T = globalGraph.induced_subgraph(neoplaIDs).vs['Centroid']
@@ -558,13 +558,13 @@ def constructGraphFromDict(
     STree = cKDTree(centroid_S)
     dis, pairindex_T = Ttree.query(centroid_I, k=1) 
     paircentroid_T = np.array(centroid_T)[pairindex_T] 
-    barrier = []
+    blocker = []
     for Tcoor, Icoor, r in tqdm(zip(centroid_I, paircentroid_T, dis), total=len(centroid_I)):
         set1 = set(STree.query_ball_point(Tcoor, r))
         set2 = set(STree.query_ball_point(Icoor, r))
-        barrier.append(len(set1 & set2))
-    globalGraph.vs[inflamIDs]['stromaBarrier'] = barrier
-    print(f"{'stroma barrier cost':#^40s}, {time.time() - t4:*^10.2f}")
+        blocker.append(len(set1 & set2))
+    globalGraph.vs[inflamIDs]['stromaBlocker'] = blocker
+    print(f"{'stroma blocker cost':#^40s}, {time.time() - t4:*^10.2f}")
 
     return globalGraph, edge_info
 
