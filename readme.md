@@ -2,7 +2,7 @@
 
 ## Description
 
-sc-MTOP is an analysis framework based on deep learning and computational pathology. It consists of two steps: 1) Nuclear segmentation and classification; 2) Feature extraction. This framework aims to characterize the tumor ecosystem diversity at the single-cell level. We have established a [demo](http://101.132.124.14/#/dashboard) website to show the functions.
+sc-MTOP is an analysis framework based on deep learning and computational pathology. It consists of two steps: 1) Nuclear segmentation and classification; 2) Feature extraction. This framework aims to characterize the tumor ecosystem diversity at the single-cell level. We have established a [demo](http://sc-mtop.biosolver.cn/) website to show the functions.
 
 This is the official pytorch implementation of sc-MTOP. Note that only the Nuclear segmentation and classification step supports batch processing.
 
