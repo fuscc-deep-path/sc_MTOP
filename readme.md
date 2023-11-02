@@ -60,8 +60,9 @@ wget --no-check-certificate --content-disposition -P ./Hover https://github.com/
 ```
 Download the demo data
 ```
-mkdir ./wsi
+mkdir -p {wsi,xml,fun_fig}
 wget --no-check-certificate --content-disposition -P ./wsi https://github.com/fuscc-deep-path/sc_MTOP/releases/download/Demo/Example001.ndpi
+wget --no-check-certificate --content-disposition -P ./xml https://github.com/fuscc-deep-path/sc_MTOP/releases/download/Demo/Example001.xml
 ```
 Nuclear segmentation and classification -- This step takes almost 2 hours with 2080Ti GPU and SSD.
 ```
@@ -71,7 +72,7 @@ Feature extraction -- This step takes almost 40 minutes with 128GB RAM and 8 pro
 ```
 python main.py feature --json_path='./output/json/Example001.json' --wsi_path='./wsi/Example001.ndpi' --output_path='./feature'
 ```
-visualization
+Visualization -- output will be in 'fun_fig' directory
 ```
-python main.py visual --feature_path='./feature/sample' --wsi_path='./wsi/sample.ndpi' --xml_path='./xml/sample.xml'
+python main.py visual --feature_path='./feature/Example001' --wsi_path='./wsi/Example001.ndpi' --xml_path='./xml/Example001.xml'
 ```
