@@ -7,7 +7,9 @@ import xml.etree.ElementTree as et
 import re
 import subprocess
 
-import openslide
+import os
+with os.add_dll_directory('C:/Program Files/openslide-win64-20220811/bin'):
+    import openslide
 
 
 class FileHandler(object):

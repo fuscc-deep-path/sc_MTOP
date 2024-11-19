@@ -1,7 +1,7 @@
 import os
 import torch
 
-def fun1(input_dir, output_dir):
+def fun1(input_dir, output_dir, cache_path='./cache'):
     print(input_dir)
     print(output_dir)
     model_path = 'Hover/hovernet_fast_pannuke_type_tf2pytorch.tar'
@@ -11,11 +11,11 @@ def fun1(input_dir, output_dir):
     sub_args = {'input_dir': input_dir,
                 'output_dir': output_dir,
                 'presplit_dir': None,
-                'cache_path':'cache',
+                'cache_path': cache_path,
                 'input_mask_dir':'',
                 'proc_mag':40,
                 'ambiguous_size':128,
-                'chunk_shape':10000,
+                'chunk_shape':4096,
                 'tile_shape':2048,
                 'save_thumb':True,
                 'save_mask':True}
@@ -68,3 +68,11 @@ def fun1(input_dir, output_dir):
     from Hover.infer.wsi import InferManager
     infer = InferManager(**method_args)
     infer.process_wsi_list(run_args)
+if __name__ == '__main__':
+    import sys
+    sys.path.append('Hover')
+    import os
+    os.add_dll_directory(r'C:\Program Files\openslide-win64-20220811\bin')
+    fun1('D:/project/temp/2024-11-09',
+         'D:/project/temp/2024-11-09_output',
+         'D:/project/temp/cache')

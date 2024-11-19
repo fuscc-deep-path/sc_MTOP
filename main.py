@@ -18,11 +18,12 @@ segment_cli = """
 Arguments for cell segment using HoVer-Net.
 
 Usage:
-    segment --input_dir=<path> --output_dir=<path>
+    segment --input_dir=<path> --output_dir=<path> --cache_path=<path>
 
 Option:
     --input_dir=<path>     Path to input data directory. Assumes the files are not nested within directory.
     --output_dir=<path>    Path to output directory.
+    --cache_path=<path>    Path to cache directory.
 """
 
 feature_cli = """

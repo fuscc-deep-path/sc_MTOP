@@ -11,6 +11,6 @@ wsi \
 --input_dir=/home/xujun/FUSCC/WSI_example/WSI2 \
 --output_dir=/home/xujun/FUSCC/WSI_example/pred2 \
 --presplit_dir=/home/xujun/FUSCC/WSI_example/WSI_presplit2 \
---proc_mag 20 \
+--proc_mag 40 \
 --save_thumb \
 --save_mask

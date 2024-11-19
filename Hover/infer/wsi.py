@@ -580,6 +580,13 @@ class InferManager(base.InferManager):
         out_ch = 3 if self.method["model_args"]["nr_types"] is None else 4
         self.wsi_inst_info = {}
         # TODO: option to use entire RAM if users have too much available, would be faster than mmap
+
+        try:
+            self.wsi_inst_map._mmap.close()
+            self.wsi_pred_map._mmap.close()
+        except:
+            pass
+
         self.wsi_inst_map = np.lib.format.open_memmap(
             "%s/pred_inst.npy" % self.cache_path,
             mode="w+",
@@ -808,11 +815,9 @@ class InferManager(base.InferManager):
             if os.path.exists(output_file):
                 log_info("Skip: %s" % wsi_base_name)
                 continue
-            try:
-                log_info("Process: %s" % wsi_base_name)
-                self.process_single_file(wsi_path, msk_path, self.output_dir)
-                log_info("Finish")
-            except:
-                logging.exception("Crash")
+
+            log_info("Process: %s" % wsi_base_name)
+            self.process_single_file(wsi_path, msk_path, self.output_dir)
+            log_info("Finish")
         # rm_n_mkdir(self.cache_path)  # clean up all cache
         return
