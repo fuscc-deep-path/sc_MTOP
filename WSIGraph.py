@@ -18,6 +18,7 @@ import igraph as ig
 import json
 import time
 import os
+import signal
 import multiprocessing as mp
 import xml.etree.ElementTree as et
 import pandas as pd
@@ -26,6 +27,10 @@ try:
     mp.set_start_method('spawn')
 except:
     pass
+
+
+def worker_initializer():
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
 
 
 def getRegionPropFromContour(contour, bbox, extention=2):
@@ -136,8 +141,13 @@ def getMorphFeatures(name, contours, bboxes, desc, process_n=1):
         for batch in range(0, vertex_len, batch_size):
             p_slice = [slice(batch + i, min(batch + batch_size, vertex_len), process_n) for i in range(process_n)]
             args = [[ids, name[i], contours[i], bboxes[i]] for ids, i in enumerate(p_slice)]
-            with mp.Pool(process_n) as p:
-                ans = p.map(SingleMorphFeatures, args)
+            try:
+                with mp.Pool(process_n, initializer=worker_initializer) as p:
+                    ans = p.map(SingleMorphFeatures, args)
+            except KeyboardInterrupt:
+                p.terminate()
+                p.join()
+                raise
             for q_info in ans:
                 for k, v in zip(q_info.keys(), q_info.values()):
                     featuresDict[k] += v
@@ -255,8 +265,13 @@ def getGLCMFeatures(wsiPath, name, contours, bboxes, pad=2, level=0, process_n=1
         for batch in range(0, vertex_len, batch_size):
             p_slice = [slice(batch + i, min(batch + batch_size, vertex_len), process_n) for i in range(process_n)]
             args = [[ids, wsiPath, name[i], contours[i], bboxes[i], pad, level] for ids, i in enumerate(p_slice)]
-            with mp.Pool(process_n) as p:
-                ans = p.map(SingleGLCMFeatures, args)
+            try:
+                with mp.Pool(process_n, initializer=worker_initializer) as p:
+                    ans = p.map(SingleGLCMFeatures, args)
+            except KeyboardInterrupt:
+                p.terminate()
+                p.join()
+                raise
             for q_info in ans:
                 for k, v in zip(q_info.keys(), q_info.values()):
                     featuresDict[k] += v
@@ -340,8 +355,13 @@ def getGraphCenterFeatures(graph: ig.Graph):
                 result[k] += v
         if subgraph.vcount() > 50000:  # Huge graph, use multiprocessing
             args = [[subgraph, cmd] for cmd in multi_cmds]
-            with mp.Pool() as p:
-                ans = p.map(getSingleGraphFeatures, args)
+            try:
+                with mp.Pool(initializer=worker_initializer) as p:
+                    ans = p.map(getSingleGraphFeatures, args)
+            except KeyboardInterrupt:
+                p.terminate()
+                p.join()
+                raise
             for q_info in ans:
                 for k, v in zip(q_info.keys(), q_info.values()):
                     result[k] += v
